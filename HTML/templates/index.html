@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Huffman Compressor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Huffman Compression Tool</h1>
+
+        <!-- Compression Section -->
+        <h2>Compression</h2>
+        <form id="compressForm" class="upload-box" method="POST" action="/upload" enctype="multipart/form-data">
+            <label><strong>Upload .txt File:</strong></label><br>
+            <input type="file" name="file" accept=".txt" required>
+            <button type="submit">Compress</button>
+        </form>
+
+        <div id="compressionResult" class="download-box" style="display: none;">
+            <p><strong>Download compressed files:</strong></p>
+            <a id="downloadCompressed" href="#">Download .huff</a>
+            <a id="downloadJson" href="#">Download .json</a>
+        </div>
+
+        <h2>Decompression</h2>
+        <form id="decompressForm" class="upload-box" method="POST" action="/decompress" enctype="multipart/form-data">
+            <label><strong>Upload .huff File:</strong></label><br>
+            <input type="file" name="compressedFile" accept=".huff" required><br><br>
+            <label><strong>Upload .json File:</strong></label><br>
+            <input type="file" name="mapFile" accept=".json" required>
+            <button type="submit">Decompress</button>
+        </form>
+
+        <div id="decompressionResult" class="download-box" style="display: none;">
+            <p><strong>Download decompressed file:</strong></p>
+            <a id="downloadDecompressed" href="#">Download .txt</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('compressForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            if (result.compressedUrl && result.jsonUrl) {
+                document.getElementById('compressionResult').style.display = 'block';
+                document.getElementById('downloadCompressed').href = result.compressedUrl;
+                document.getElementById('downloadJson').href = result.jsonUrl;
+            }
+        });
+
+        document.getElementById('decompressForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+
+            const response = await fetch('/decompress', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            if (result.decompressedUrl) {
+                document.getElementById('decompressionResult').style.display = 'block';
+                document.getElementById('downloadDecompressed').href = result.decompressedUrl;
+            }
+        });
+    </script>
+</body>
+</html>

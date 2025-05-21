@@ -1,0 +1,35 @@
+#include <stdio.h>
+
+int main() {
+    int rating1, rating2, rating3;
+    
+    // Read three ratings
+    printf("Enter the first rating (1 to 10): ");
+    scanf("%d", &rating1);
+    
+    printf("Enter the second rating (1 to 10): ");
+    scanf("%d", &rating2);
+    
+    printf("Enter the third rating (1 to 10): ");
+    scanf("%d", &rating3);
+    
+    // Ensure ratings are within the valid range
+    if (rating1 < 1 || rating1 > 10 || rating2 < 1 || rating2 > 10 || rating3 < 1 || rating3 > 10) {
+        printf("Invalid ratings. Ratings must be between 1 and 10.\n");
+        return 1; // Exit with an error code
+    }
+    
+    // Find the average of the best two ratings
+    int sum = rating1 + rating2 + rating3;
+    int minRating = rating1 < rating2 ? (rating1 < rating3 ? rating1 : rating3) : (rating2 < rating3 ? rating2 : rating3);
+    int average = (sum - minRating) / 2;
+    
+    // Check if the team qualifies for the tournament (average of best two ratings >= 5)
+    if (average >= 5) {
+        printf("The team qualifies for the tournament with an average rating of %d.\n", average);
+    } else {
+        printf("The team does not qualify for the tournament with an average rating of %d.\n", average);
+    }
+    
+    return 0; // Exit successfully
+}
